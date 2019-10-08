@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "BaysianNetwork.h"
+#include "BayesianNetwork.h"
 #include "DataSet.h"
 using namespace std;
 

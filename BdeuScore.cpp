@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #include "BdeuScore.h"
-#include "BaysianNetwork.h"
+#include "BayesianNetwork.h"
 using namespace std;
 
 BdeuScore::BdeuScore(BayesianNetwork _model, DataSet _dataset): model(_model), dataset(_dataset){
