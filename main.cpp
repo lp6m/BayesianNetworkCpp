@@ -1,54 +1,48 @@
 #include <bits/stdc++.h>
 #include "Node.h"
 #include "BaysianNetwork.h"
-#include "Column.h"
-#include "DataSet.h"
 #include "BdeuScore.h"
-#include "util.h"
+#include "Column.h"
+#include "StructureLearning.h"
+#include "DataSet.h"
+#include "Util.h"
 
 using namespace std;
 
 int main(){
-  BayesianNetwork bn;
-  vector<string> node_ames;
-  int node_num, edge_num;
-  cin >> node_num >> edge_num;
-  vector<string> column_names;
-  REP(i, node_num){
-    string column_name;
-    cin >> column_name;
-    column_names.push_back(column_name);
-  }
-  REP(i, edge_num){
-    string from, to;
-    cin >> from >> to;
-    bn.add_edge(from, to);
-  }
-  bn.show_nodes();
-  
-  bn.save_as_dotscript("graph.dot");
-
-  int data_num;
-  cin >> data_num;
-  vector<vector<int>> dataarr;
-  REP(i, data_num){
-    vector<int> oneline;
-    REP(j, column_names.size()){
-      int val;
-      cin >> val;
-      oneline.push_back(val);
-    }
-    dataarr.push_back(oneline);
-  }
-
+  StructureLearning sl;
   DataSet dataset;
-  dataset.set_data(column_names, dataarr);
-  REP(i, column_names.size()){
-    cout << dataset.columns[i].name << " : ";
-    cout << dataset.columns[i].get_kind_num() << endl;
+  dataset.set_data_fromfile("dataset/asia10K.csv");
+  cout << "DataSet score load end" << endl;
+  BdeuScore bdeuscore2(dataset);
+
+  vector<Node> nodes;
+  vector<string> node_names = {"Smoker", "LungCancer", "VisitToAsia", "Tuberculosis", "TuberculosisOrCancer", "X-ray", "Bronchitis", "Dyspnea"};
+  for(string node_name: node_names){
+    nodes.push_back(Node(node_name));
+    cout << dataset.get_column_index_from_name(node_name) << endl;
+  }
+  REP(i, nodes.size()){
+    cout << nodes[i].name << endl;
+    vector<Node> except_me;
+    REP(j, nodes.size()){
+      if(i != j) except_me.push_back(nodes[j]);
+    }
+    cout << except_me.size() << endl;
+    vector<vector<Node>> possible_parents_set = sl.generate_possible_parents_set(except_me, 3);
+    cout << "size: " << possible_parents_set.size() << endl; 
+    for(vector<Node> parents: possible_parents_set){
+      cout << "[";
+      for(Node node: parents){
+        cout << node.name << ",";
+      }
+      cout << "]" << endl;
+      double local_score = 0;
+      local_score = bdeuscore2.get_local_score(nodes[i], parents);
+      cout << fixed << setprecision(8) << local_score << endl;
+    }
+    cout << "----" << endl;
   }
 
-  BdeuScore bdeuscore(bn, dataset);
-  double score = bdeuscore.get_score();
-  cout << score << endl;
+  
 }
