@@ -10,7 +10,7 @@ class DataSet{
 public:
   vector<vector<int>> data;
   void set_data(vector<string>&, vector<vector<int>>&);
-  void set_data_fromfile(string);
+  int set_data_fromfile(string);
   int get_column_index_from_name(string);
   vector<Column> columns;
 private:

@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include "Column.h"
 #include "DataSet.h"
-#include "util.h"
+#include "Util.h"
 using namespace std;
 
 void DataSet::set_column(vector<string>& columns){
@@ -30,7 +30,33 @@ void DataSet::set_data(vector<string>& column_names, vector<vector<int>>& data){
   }
 }
 
-void DataSet::set_data_fromfile(string filename){
-  //TODO
+int DataSet::set_data_fromfile(string filename){
+  ifstream ifs(filename);
+  string str;
+  if (ifs.fail()){
+    cout << "open dataset file failed" << endl;
+    return -1;
+  }
+  bool is_firstline = true;
+  vector<string> column_names;
+  vector<vector<int>> data;
+  while (getline(ifs, str)){
+    vector<string> items = Util::string_split(str, ',');
+    vector<int> oneline_data;
+    for(string item: items){
+      item = Util::string_trim(item);
+      if(is_firstline) column_names.push_back(item);
+      else{
+        int val = -1;
+        if(item == "yes") val = 1;
+        else if(item == "no") val = 0;
+        oneline_data.push_back(val);
+        data.push_back(oneline_data);
+      }
+    }
+    is_firstline = false;
+  }
+  this->set_data(column_names, data);
+  return 0;
 }
 
