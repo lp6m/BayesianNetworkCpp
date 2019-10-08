@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+#include "BaysianNetwork.h"
+#include "DataSet.h"
+using namespace std;
+
+#ifndef Define_BdeuScore
+#define Define_BdeuScore
+
+class BdeuScore{
+public:
+  BdeuScore(BayesianNetwork, DataSet);
+  double get_score();
+private:
+  BayesianNetwork model;
+  DataSet dataset;
+  double get_local_score(Node variable, vector<Node>& parents);
+
+  struct StateCount{
+    int parents_candidates_num;
+    int child_candidates_num;
+    map<vector<int>, pair<int, map<int, int>>> countmap;
+    StateCount(int pnum, int cnum, map<vector<int>, pair<int, map<int, int>>> countmap){
+      this->parents_candidates_num = pnum;
+      this->child_candidates_num = cnum;
+      this->countmap = countmap;
+    }
+  };
+  BdeuScore::StateCount get_state_counts(Node variable, vector<Node>& parents);
+};
+
+#endif
