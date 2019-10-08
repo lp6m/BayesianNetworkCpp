@@ -7,6 +7,10 @@ BdeuScore::BdeuScore(BayesianNetwork _model, DataSet _dataset): model(_model), d
 
 }
 
+BdeuScore::BdeuScore(DataSet _dataset): dataset(_dataset){
+
+}
+
 double BdeuScore::get_score(){
   double score = 0;
   auto nodes = this->model.get_nodes();

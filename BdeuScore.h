@@ -9,11 +9,12 @@ using namespace std;
 class BdeuScore{
 public:
   BdeuScore(BayesianNetwork, DataSet);
+  BdeuScore(DataSet);
   double get_score();
+  double get_local_score(Node variable, vector<Node>& parents);
 private:
   BayesianNetwork model;
   DataSet dataset;
-  double get_local_score(Node variable, vector<Node>& parents);
 
   struct StateCount{
     int parents_candidates_num;
