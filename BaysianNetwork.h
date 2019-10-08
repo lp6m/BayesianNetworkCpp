@@ -11,9 +11,9 @@ public:
   vector<string> column_names;
   
   BayesianNetwork();
-  BayesianNetwork(vector<pair<string, string>>);
+  BayesianNetwork(vector<pair<string, string>>&);
   void add_edge(string, string);
-  void set_graph(vector<pair<string, string>> arrowList);
+  void set_graph(vector<pair<string, string>>& arrowList);
   void show_nodes();
   vector<string> get_node_names();
   vector<Node> get_nodes();

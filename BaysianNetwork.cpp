@@ -10,11 +10,11 @@ BayesianNetwork::BayesianNetwork(){
 
 }
 
-BayesianNetwork::BayesianNetwork(vector<pair<string, string>> arrowList){
+BayesianNetwork::BayesianNetwork(vector<pair<string, string>>& arrowList){
   set_graph(arrowList);
 }
 
-void BayesianNetwork::set_graph(vector<pair<string, string>> edgeList){
+void BayesianNetwork::set_graph(vector<pair<string, string>>& edgeList){
   for(auto edge :edgeList){
     this->add_edge(edge.first, edge.second);
   }
