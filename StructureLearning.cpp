@@ -14,7 +14,7 @@ vector<vector<Node>> StructureLearning::generate_possible_parents_set(vector<Nod
   //push empty vector which means no parent case(k=0)
   candidates.push_back(vector<Node>());
 
-  FOR(k, 1, max_parent_num){
+  FOR(k, 1, max_parent_num+1){
     //generate nCk
     int n = nodes.size();
     queue<pair<int, vector<int>>> q; //pos, array
