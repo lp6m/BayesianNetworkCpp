@@ -48,8 +48,8 @@ int DataSet::set_data_fromfile(string filename){
       if(is_firstline) column_names.push_back(item);
       else{
         int val = -1;
-        if(item == "yes") val = 1;
-        else if(item == "no") val = 0;
+        if(item == "yes" || item == "1") val = 1;
+        else if(item == "no" || item == "0") val = 0;
         oneline_data.push_back(val);
         data.push_back(oneline_data);
       }
