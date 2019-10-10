@@ -12,6 +12,9 @@ public:
   Node();
   Node(string);
   void add_parents(Node);
+  bool operator<(const Node &another) const{
+      return name < another.name;
+  };
 };
 
 #endif
