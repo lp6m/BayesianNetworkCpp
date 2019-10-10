@@ -43,7 +43,34 @@ void scoretest(){
   cout << fixed << setprecision(8) << "K2Score: " << k2score.get_score() << endl;
   cout << fixed << setprecision(8) << "BICScore: " << bicscore.get_score() << endl;
 }
+
+void decompose_test(){
+  vector<pair<string, string>> vp;
+  vp.push_back(make_pair("A", "B"));
+  vp.push_back(make_pair("B", "C"));
+  vp.push_back(make_pair("C", "D"));
+  vp.push_back(make_pair("C", "E"));
+  vp.push_back(make_pair("E", "C"));
+  vp.push_back(make_pair("E", "G"));
+  vp.push_back(make_pair("E", "H"));
+  vp.push_back(make_pair("H", "I"));
+  vp.push_back(make_pair("H", "J"));
+  vp.push_back(make_pair("G", "F"));
+  vp.push_back(make_pair("F", "G"));
+  vp.push_back(make_pair("D", "G"));
+  vp.push_back(make_pair("D", "K"));
+  vp.push_back(make_pair("D", "L"));
+  vp.push_back(make_pair("L", "M"));
+
+  BayesianNetwork bn(vp);
+  cout << endl;
+  StructureLearning sl;
+  sl.test_decompose(bn);
+}
+
 int main(){
+  decompose_test();
+  return 0;
   scoretest();
   StructureLearning sl;
   DataSet dataset;
