@@ -46,35 +46,48 @@ void scoretest(){
 
 void decompose_test(){
   vector<pair<string, string>> vp;
-  vp.push_back(make_pair("A", "B"));
-  vp.push_back(make_pair("B", "C"));
-  vp.push_back(make_pair("C", "D"));
-  vp.push_back(make_pair("C", "E"));
-  vp.push_back(make_pair("E", "C"));
-  vp.push_back(make_pair("E", "G"));
-  vp.push_back(make_pair("E", "H"));
-  vp.push_back(make_pair("H", "I"));
-  vp.push_back(make_pair("H", "J"));
-  vp.push_back(make_pair("G", "F"));
-  vp.push_back(make_pair("F", "G"));
-  vp.push_back(make_pair("D", "G"));
-  vp.push_back(make_pair("D", "K"));
-  vp.push_back(make_pair("D", "L"));
-  vp.push_back(make_pair("L", "M"));
+  // vp.push_back(make_pair("A", "B"));
+  // vp.push_back(make_pair("B", "C"));
+  // vp.push_back(make_pair("C", "D"));
+  // vp.push_back(make_pair("C", "E"));
+  // vp.push_back(make_pair("E", "C"));
+  // vp.push_back(make_pair("E", "G"));
+  // vp.push_back(make_pair("E", "H"));
+  // vp.push_back(make_pair("H", "I"));
+  // vp.push_back(make_pair("H", "J"));
+  // vp.push_back(make_pair("G", "F"));
+  // vp.push_back(make_pair("F", "G"));
+  // vp.push_back(make_pair("D", "G"));
+  // vp.push_back(make_pair("D", "K"));
+  // vp.push_back(make_pair("D", "L"));
+  // vp.push_back(make_pair("L", "M"));
+
+  vp.push_back(make_pair("T", "A"));
+  vp.push_back(make_pair("T", "L"));
+  vp.push_back(make_pair("L", "T"));
+  vp.push_back(make_pair("T", "E"));
+  vp.push_back(make_pair("E", "T"));
+  vp.push_back(make_pair("L", "E"));
+  vp.push_back(make_pair("E", "L"));
+  vp.push_back(make_pair("L", "S"));
+  vp.push_back(make_pair("S", "B"));
+  vp.push_back(make_pair("B", "S"));
+  vp.push_back(make_pair("E", "X"));
+  vp.push_back(make_pair("B", "D"));
+  vp.push_back(make_pair("D", "B"));
+  vp.push_back(make_pair("E", "D"));
 
   BayesianNetwork bn(vp);
-  cout << endl;
   StructureLearning sl;
   sl.test_decompose(bn);
 }
 
 int main(){
-  decompose_test();
-  return 0;
-  scoretest();
+  // decompose_test();
+  // return 0;
   StructureLearning sl;
   DataSet dataset;
-  dataset.set_data_fromfile("dataset/asia_10000_fromR.csv");
+  dataset.set_data_fromfile("dataset/asia10K.csv");
   cout << "DataSet score load end" << endl;
   BdeuScore bdeuscore(dataset);
   // K2Score k2score(dataset);
@@ -132,6 +145,10 @@ int main(){
     REP(j, parents.size()) cout << parents[j].name << ", ";
     cout << "] ->" << node.name << endl;
   }
+
+
   bn.save_as_dotscript("data_from_R_Bdeu.dot");
   
+  StructureLearning sl2;
+  sl2.test_decompose(bn);
 }
