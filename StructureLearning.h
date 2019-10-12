@@ -16,9 +16,11 @@ private:
     map<string, int> belong_component_index; //indicates component index which nodes belongs to
     vector<set<Node>> bound_nodes_array;
     vector<set<int>> to_edges; //to_edges[i] contains nodes with directed edge from i-th component
+    vector<set<int>> from_edges; //from_edges[i] contains nodes with directed edge from i-th component
   };
+  vector<int> topological_sort(StructureLearning::Decomposed_DAG);
   StructureLearning::Decomposed_DAG decompose_strong_connected_components(BayesianNetwork network);
-  void show_decomposed_dag(StructureLearning::Decomposed_DAG);
+  void show_decomposed_dag(StructureLearning::Decomposed_DAG&, vector<int>&);
   string get_nodes_string(set<Node>);
 };
 #endif

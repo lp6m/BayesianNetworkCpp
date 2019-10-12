@@ -63,10 +63,42 @@ string StructureLearning::get_nodes_string(set<Node> node_set){
   return res;
 }
 
-void StructureLearning::show_decomposed_dag(StructureLearning::Decomposed_DAG decomposed_DAG){
+vector<int> StructureLearning::topological_sort(StructureLearning::Decomposed_DAG d_DAG){
+  vector<int> sorted_nodes_indices;
+  queue<int> q;
+  int node_num = d_DAG.from_edges.size();
+  REP(i, node_num){
+    if(d_DAG.from_edges[i].size() == 0) q.push(i);
+  }
+  while(!q.empty()){
+    int node_index = q.front();
+    q.pop();
+    sorted_nodes_indices.push_back(node_index);
+    int to_node_num = d_DAG.to_edges[node_index].size();
+    REP(j, to_node_num){
+      int to_node_index = *(d_DAG.to_edges[node_index].begin());//get the value of first iterator //any index is OK
+      d_DAG.to_edges[node_index].erase(to_node_index);
+      d_DAG.from_edges[to_node_index].erase(node_index);
+      if(d_DAG.from_edges[to_node_index].size() == 0) q.push(to_node_index);
+    }
+  }
+
+  //DAG check
+  REP(i, node_num){
+    if(d_DAG.from_edges[i].size() != 0){
+      throw "given graph was not DAG. Topological Sort failed.";
+    }
+  }
+
+  return sorted_nodes_indices;
+}
+
+void StructureLearning::show_decomposed_dag(StructureLearning::Decomposed_DAG& decomposed_DAG, vector<int>& sorted_nodes_indices){
   map<int, string> cache_set_node_string;
 
-  REP(parent_index, decomposed_DAG.bound_nodes_array.size()){
+  REP(i, decomposed_DAG.bound_nodes_array.size()){
+    // int parent_index = sorted_nodes_indices[i];
+    int parent_index = i;
     set<Node> parent_nodes = decomposed_DAG.bound_nodes_array[parent_index];
     string parent_string;
     if(cache_set_node_string.count(parent_index) != 0) parent_string = cache_set_node_string[parent_index];
@@ -88,6 +120,9 @@ void StructureLearning::show_decomposed_dag(StructureLearning::Decomposed_DAG de
       cout << parent_string << " -> " << child_string << endl;
     }
   }
+
+  cout << "--------" << endl;
+
 }
 
 struct StackedOrderNodes{
@@ -99,8 +134,8 @@ struct StackedOrderNodes{
     for(Node to: children_map[node.name]) dfs(to, children_map);
     stacked_order_nodes.push_back(node);
   }
-  void do_dfs(Node start_node, map<string, vector<Node>>& children_map){
-    dfs(start_node, children_map);
+  void do_dfs(vector<Node>& nodes, map<string, vector<Node>>& children_map){
+    for(Node node: nodes) dfs(node, children_map);
   }
 };
 
@@ -126,7 +161,7 @@ StructureLearning::Decomposed_DAG StructureLearning::decompose_strong_connected_
 
   //first DFS
   StackedOrderNodes son;
-  son.do_dfs(nodes[0], children_map);
+  son.do_dfs(nodes, children_map);
   vector<Node> stacked_order_nodes = son.stacked_order_nodes;
 
   reverse(stacked_order_nodes.begin(), stacked_order_nodes.end());
@@ -158,16 +193,14 @@ StructureLearning::Decomposed_DAG StructureLearning::decompose_strong_connected_
     }
     if(bound_nodes.size() > 0){
       components_cnt++;
-
-      for(auto itr = bound_nodes.begin(); itr != bound_nodes.end(); itr++){
-        cout << itr->name << endl;
-      }
       decomposed_DAG.bound_nodes_array.push_back(bound_nodes);
     }
   }
+  
   //reserve edge vector array with number of components
   REP(i, decomposed_DAG.bound_nodes_array.size()){
     decomposed_DAG.to_edges.push_back(set<int>());
+    decomposed_DAG.from_edges.push_back(set<int>());
   }
 
   //check unused edge which means edge of DAG
@@ -181,6 +214,7 @@ StructureLearning::Decomposed_DAG StructureLearning::decompose_strong_connected_
       if(from_index == to_index) continue;
       swap(from_index, to_index); //change to original direction by reverse
       decomposed_DAG.to_edges[from_index].insert(to_index);
+      decomposed_DAG.from_edges[to_index].insert(from_index);
     }
   }
   return decomposed_DAG;
@@ -188,5 +222,6 @@ StructureLearning::Decomposed_DAG StructureLearning::decompose_strong_connected_
 
 void StructureLearning::test_decompose(BayesianNetwork network){
   auto dag = decompose_strong_connected_components(network);
-  show_decomposed_dag(dag); 
+  vector<int> sorted_nodes_indices = topological_sort(dag);
+  show_decomposed_dag(dag, sorted_nodes_indices); 
 }
